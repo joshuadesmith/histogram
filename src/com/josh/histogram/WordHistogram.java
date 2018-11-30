@@ -14,16 +14,32 @@ public class WordHistogram {
      * Determines whether or not non-alphanumeric characters will be removed
      * from strings before they are consumed. By default this is set to true.
      */
-    private boolean alphaNumeric;
+    private boolean alphaNumeric = true;
 
     public WordHistogram() {
         this.histogram = new HashMap<>();
-        this.alphaNumeric = true;
+    }
+
+    public WordHistogram(Map<String, Integer> histogram) {
+        this.histogram = histogram;
     }
 
     public WordHistogram(boolean alphaNumeric) {
         this.histogram = new HashMap<>();
         this.alphaNumeric = alphaNumeric;
+    }
+
+    public WordHistogram(Map<String, Integer> histogram, boolean alphaNumeric) {
+        this.histogram = histogram;
+        this.alphaNumeric = alphaNumeric;
+    }
+
+    public Map<String, Integer> getHistogram() {
+        return histogram;
+    }
+
+    public boolean isAlphaNumeric() {
+        return alphaNumeric;
     }
 
     /**
