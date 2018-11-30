@@ -1,5 +1,6 @@
 package com.josh.histogram;
 
+import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -42,6 +43,43 @@ public class WordHistogram {
         return alphaNumeric;
     }
 
+    public void consumeTextFile(String fileName) {
+        executeConsumeTextFile(new File(fileName));
+    }
+
+    public void consumeTextFile(File file) {
+        executeConsumeTextFile(file);
+    }
+
+    /**
+     * Count the occurrences of each word in a text file and add them to the current histogram.
+     *
+     * @param file Text file to be consumed
+     */
+    private void executeConsumeTextFile(File file) {
+        BufferedReader reader = null;
+        try {
+            reader = new BufferedReader(new FileReader(file));
+
+            String line;
+            while ((line = reader.readLine()) != null) {
+                consumeString(line);
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println("Error: file \"" + file + "\" not found.");
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        } finally {
+            if (reader != null) {
+                try {
+                    reader.close();
+                } catch (IOException e) {
+                    System.out.println(e.getMessage());
+                }
+            }
+        }
+    }
+
     /**
      * Count the occurrences of words in a String and add the number of occurrences
      * of each word to the existing histogram.
@@ -81,8 +119,8 @@ public class WordHistogram {
 
     /**
      * Clean the string by doing the following:
-     *  - Remove all non-alphanumeric characters
-     *  - Convert the string to lowercase
+     * - Remove all non-alphanumeric characters
+     * - Convert the string to lowercase
      *
      * @param s String to be processed
      * @return The cleaned string

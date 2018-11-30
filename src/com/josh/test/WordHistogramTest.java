@@ -1,6 +1,7 @@
 package com.josh.test;
 
 import com.josh.histogram.WordHistogram;
+
 import org.junit.Test;
 import org.junit.Assert;
 
@@ -61,5 +62,42 @@ public class WordHistogramTest {
         Assert.assertEquals(2, freq);
         freq = hist.getHistogram().get("aaa");
         Assert.assertEquals(3, freq);
+    }
+
+    @Test
+    public void testConsumeTextFileAlNumSmall() {
+        String filePath = System.getProperty("user.dir") + "/testFiles/test-alphanumeric-small.txt";
+        testConsumeTextFileHelper(filePath);
+    }
+
+    @Test
+    public void testConsumeTextFileNonAlNumSmall() {
+        String filePath = System.getProperty("user.dir") + "/testFiles/test-non-alphanumeric-small.txt";
+        testConsumeTextFileHelper(filePath);
+    }
+
+    private void testConsumeTextFileHelper(String filePath) {
+        WordHistogram hist = new WordHistogram();
+        hist.consumeTextFile(filePath);
+        Map<String, Integer> map = hist.getHistogram();
+
+        Assert.assertFalse(map.isEmpty());
+        testKeyValueInMapHelper(map, "the", 4);
+        testKeyValueInMapHelper(map, "ran", 2);
+        testKeyValueInMapHelper(map, "dock", 2);
+        testKeyValueInMapHelper(map, "clock", 2);
+        testKeyValueInMapHelper(map, "dickory", 2);
+        testKeyValueInMapHelper(map, "hickory", 2);
+        testKeyValueInMapHelper(map, "mouse", 2);
+        testKeyValueInMapHelper(map, "down", 1);
+        testKeyValueInMapHelper(map, "up", 1);
+        testKeyValueInMapHelper(map, "struck", 1);
+        testKeyValueInMapHelper(map, "one", 1);
+    }
+
+    private void testKeyValueInMapHelper(Map<String, Integer> m, String k, int v) {
+        Assert.assertTrue(m.containsKey(k));
+        int actual = m.get(k);
+        Assert.assertEquals(v, actual);
     }
 }
