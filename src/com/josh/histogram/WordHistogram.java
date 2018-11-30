@@ -1,8 +1,7 @@
 package com.josh.histogram;
 
 import java.io.*;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class WordHistogram {
     /**
@@ -16,6 +15,8 @@ public class WordHistogram {
      * from strings before they are consumed. By default this is set to true.
      */
     private boolean alphaNumeric = true;
+
+    private int maxWordLength = 0;
 
     public WordHistogram() {
         this.histogram = new HashMap<>();
@@ -114,7 +115,86 @@ public class WordHistogram {
             histogram.put(word, histogram.get(word) + 1);
         } else {
             histogram.put(word, 1);
+            if (word.length() > maxWordLength) {
+                maxWordLength = word.length();
+            }
         }
+    }
+
+    /**
+     * Sort the histogram in descending order by word frequency.
+     */
+    public void sortDescending() {
+        List<Map.Entry<String, Integer>> entryList = new ArrayList<>(histogram.entrySet());
+        entryList.sort(Map.Entry.comparingByValue(Comparator.reverseOrder()));
+
+        Map<String, Integer> sorted = new LinkedHashMap<>();
+        for (Map.Entry<String, Integer> entry : entryList) {
+            sorted.put(entry.getKey(), entry.getValue());
+        }
+
+        histogram = sorted;
+    }
+
+    /**
+     * Write the contents of the histogram to a file named output.txt.
+     */
+    public void writeToTextFile() {
+        BufferedWriter writer = null;
+        try {
+            String fileName = "output.txt";
+            File outputFile = new File(fileName);
+            if (outputFile.exists()) {
+                outputFile.delete();
+            }
+
+            writer = new BufferedWriter(new FileWriter("output.txt"));
+            System.out.println("Max word length is " + Integer.toString(maxWordLength));
+            for (Map.Entry<String, Integer> entry : histogram.entrySet()) {
+                writer.write(getHistogramEntryString(entry, maxWordLength));
+                writer.flush();
+            }
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        } finally {
+            if (writer != null) {
+                try {
+                    writer.close();
+                } catch (IOException e) {
+                    System.out.println(e.getMessage() + " (Occurred while closing BufferedWriter)");
+                }
+            }
+        }
+    }
+
+    /**
+     * Get a formatted string representation of an map entry.
+     *
+     * @param entry A map entry to be represented as a string
+     * @param reqLen The required length of the formatted entry key. Used to align all pipe characters
+     *               the output file.
+     * @return
+     */
+    private String getHistogramEntryString(Map.Entry<String, Integer> entry, int reqLen) {
+        StringBuilder sb = new StringBuilder();
+        String k = entry.getKey();
+        int v = entry.getValue();
+
+        // Pad the word with spaces if necessary
+        int lenDiff = reqLen - k.length();
+        for (int i = 0; i < lenDiff; i++) {
+            sb.append(" ");
+        }
+
+        // Word and Pipe separator
+        sb.append(k).append(" | ");
+
+        // Number of occurrences
+        for (int i = 0; i < v; i++) {
+            sb.append('=');
+        }
+        sb.append("(").append(v).append(")\n");
+        return sb.toString();
     }
 
     /**
