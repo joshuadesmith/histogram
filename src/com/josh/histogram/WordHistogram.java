@@ -93,7 +93,7 @@ public class WordHistogram {
         }
 
         String cleanedString = cleanString(s);
-        String[] words = cleanedString.split("\\s+");
+        String[] words = cleanedString.trim().split("\\s+");
 
         for (String w : words) {
             incrementWord(w);
@@ -208,7 +208,7 @@ public class WordHistogram {
     private String cleanString(String s) {
         String ret = s.trim();
         if (alphaNumeric)
-            ret = s.replaceAll("[^A-Za-z0-9 ]", "");
+            ret = s.replaceAll("[^A-Za-z0-9 ]", " ");
         return ret.toLowerCase();
     }
 }

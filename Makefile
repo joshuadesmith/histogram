@@ -35,7 +35,13 @@ compiletests:
 
 runcreatehistogram: | createoutdir compilesource
 	@echo Running Histogram...; \
+	>output.txt; \
 	java -cp $(SRC_OUT) $(MAIN_APP) $(TEST_FILE_1);
+
+runcreatehistogram_theraven: | createoutdir compilesource
+	@echo Creating a word histogram for The Raven; \
+	>output.txt; \
+	java -cp $(SRC_OUT) $(MAIN_APP) ./testfiles/the-raven.txt;
 
 runhistogramtests: | createoutdir compilesource
 	@echo Running Unit Tests...; \
