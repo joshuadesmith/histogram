@@ -193,7 +193,7 @@ public class WordHistogram {
         for (int i = 0; i < v; i++) {
             sb.append('=');
         }
-        sb.append("(").append(v).append(")\n");
+        sb.append(" (").append(v).append(")\n");
         return sb.toString();
     }
 
